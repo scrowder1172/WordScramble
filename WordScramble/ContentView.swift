@@ -17,37 +17,56 @@ struct ContentView: View {
     @State private var errorMessage: String = ""
     @State private var showingError: Bool = false
     
+    @State private var score: Int = 0
+    
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    TextField("Enter your word", text: $newWord)
-                        .textInputAutocapitalization(.never)
-                }
-                
-                Section {
-                    ForEach(usedWords, id:\.self) { word in
-                        HStack {
-                            Image(systemName: "\(word.count).circle")
-                            Text(word)
+            VStack {
+                List {
+                    Section {
+                        TextField("Enter your word", text: $newWord)
+                            .textInputAutocapitalization(.never)
+                    }
+                    
+                    Section {
+                        ForEach(usedWords, id:\.self) { word in
+                            HStack {
+                                Image(systemName: "\(word.count).circle")
+                                Text(word)
+                            }
+                            
                         }
-                        
                     }
                 }
+                .navigationTitle(rootWord)
+                .onSubmit(addNewWord)
+                .onAppear(perform: startGame)
+                .alert(errorTitle, isPresented: $showingError) { } message: {
+                    Text(errorMessage)
+                }
+                .toolbar {
+                    Button("Restart", action: startGame)
+                }
+                Text("Scoring System:\n3-4 letter word: 1 pt\n5-6 letter word: 3 pt\n7-8 letter word: 5 pt")
+                Rectangle()
+                    .frame(width: .infinity, height: 2)
+                Text("Your Score: \(score)")
+                    .font(.largeTitle)
             }
-            .navigationTitle(rootWord)
-            .onSubmit(addNewWord)
-            .onAppear(perform: startGame)
-            .alert(errorTitle, isPresented: $showingError) { } message: {
-                Text(errorMessage)
-            }
+            
         }
+        
     }
     
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
         guard answer.count > 0 else {return}
+        
+        guard isNotRootword(word: answer) else {
+            wordError(title: "Word invalid", message: "Do not use root word")
+            return
+        }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original")
@@ -64,9 +83,21 @@ struct ContentView: View {
             return
         }
         
+        guard isTooShort(word: answer) else {
+            wordError(title: "Word too short", message: "Words should be at least 3 characters")
+            return
+        }
+        
         
         withAnimation {
             usedWords.insert(answer, at: 0)
+            if answer.count < 5 {
+                score += 1
+            } else if answer.count < 7 {
+                score += 3
+            } else {
+                score += 5
+            }
         }
         newWord = ""
     }
@@ -76,11 +107,17 @@ struct ContentView: View {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
+                usedWords = []
+                score = 0
                 return
             }
         }
         
         fatalError("Could not load start.txt from bundle.")
+    }
+    
+    func isNotRootword(word: String) -> Bool {
+        return word != rootWord
     }
     
     func isOriginal(word: String) -> Bool {
@@ -98,6 +135,10 @@ struct ContentView: View {
             }
         }
         return true
+    }
+    
+    func isTooShort(word: String) -> Bool {
+        return word.count > 2
     }
     
     func isReal(word: String) -> Bool {
