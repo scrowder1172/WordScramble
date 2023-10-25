@@ -88,7 +88,7 @@ struct ContentView: View {
     }
     
     func isPossible(word: String) -> Bool {
-        var tempWord = word
+        var tempWord = rootWord
         
         for letter in word {
             if let pos = tempWord.firstIndex(of: letter) {
