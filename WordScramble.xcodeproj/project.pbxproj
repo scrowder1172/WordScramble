@@ -40,6 +40,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52537A742AF142A20093D751 /* TutorialFiles */ = {
+			isa = PBXGroup;
+			children = (
+				52A89E962AE6F03000BB9DEC /* ListExamples.swift */,
+				52A89E982AE6F90D00BB9DEC /* FileResources.swift */,
+				52A89E9A2AE6FDE200BB9DEC /* StringsExamples.swift */,
+			);
+			path = TutorialFiles;
+			sourceTree = "<group>";
+		};
 		52A89E7C2AE6DEB500BB9DEC = {
 			isa = PBXGroup;
 			children = (
@@ -61,12 +71,10 @@
 			children = (
 				52A89E882AE6DEB500BB9DEC /* WordScrambleApp.swift */,
 				52A89E8A2AE6DEB500BB9DEC /* ContentView.swift */,
-				52A89E8C2AE6DEB600BB9DEC /* Assets.xcassets */,
-				52A89E8E2AE6DEB600BB9DEC /* Preview Content */,
-				52A89E962AE6F03000BB9DEC /* ListExamples.swift */,
-				52A89E982AE6F90D00BB9DEC /* FileResources.swift */,
-				52A89E9A2AE6FDE200BB9DEC /* StringsExamples.swift */,
 				52A89E9C2AE70E8700BB9DEC /* start.txt */,
+				52A89E8C2AE6DEB600BB9DEC /* Assets.xcassets */,
+				52537A742AF142A20093D751 /* TutorialFiles */,
+				52A89E8E2AE6DEB600BB9DEC /* Preview Content */,
 			);
 			path = WordScramble;
 			sourceTree = "<group>";
